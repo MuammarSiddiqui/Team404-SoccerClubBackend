@@ -71,6 +71,23 @@ namespace Team404_SoccerClubBackend.Controllers
             return Ok(_mapper.Map<TeamStatsResultDto>(TeamStatsResult));
         }
 
+        [HttpGet]
+        [Route("[action]")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<IActionResult> GetByMatchAndTeam(Guid MatchId,Guid TeamId)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+            var TeamStatsResult = await _service.GetByMatchAndTeam(MatchId, TeamId);
+
+            if (TeamStatsResult == null) return Ok(null);
+
+            return Ok(_mapper.Map<TeamStatsResultDto>(TeamStatsResult));
+        }
+
         [HttpPost]
         [Route("[action]")]
         [ProducesResponseType(StatusCodes.Status200OK)]

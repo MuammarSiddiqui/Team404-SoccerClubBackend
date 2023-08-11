@@ -23,6 +23,7 @@ namespace Infrastructure
         public virtual DbSet<MatchStats> TBL_MatchStats { get; set; }
         public virtual DbSet<Matches> TBL_Matches { get; set; }
         public virtual DbSet<Competition> TBL_Competition { get; set; }
+        public virtual DbSet<ClubHistory> TBL_ClubHistory { get; set; }
 
 
     }

@@ -61,6 +61,7 @@ namespace MatchStats404_SoccerClubBackend.Controllers
             return Ok(_mapper.Map<MatchStatsResultDto>(MatchStatsResult));
         }
 
+
         [HttpPost]
         [Route("[action]")]
         [ProducesResponseType(StatusCodes.Status200OK)]

@@ -1,11 +1,14 @@
 ﻿using ApplicationLayer.Services.PlayerService;
 using AutoMapper;
 using DomainLayer.Dtos.Player;
+using DomainLayer.Dtos.Team;
 using DomainLayer.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.IO.Pipelines;
 using System.Security.Claims;
 using Team404_SoccerClubBackend.Config;
+using Team404_SoccerClubBackend.Config.File;
 
 namespace Player404_SoccerClubBackend.Controllers
 {
@@ -16,11 +19,13 @@ namespace Player404_SoccerClubBackend.Controllers
     {
 
         private readonly IPlayerService _service;
+        private readonly IFileUpload _file;
         private readonly IMapper _mapper;
 
-        public PlayerController(IMapper mapper, IPlayerService service)
+        public PlayerController(IMapper mapper, IPlayerService service,IFileUpload file)
         {
             _mapper = mapper;
+            _file = file;
             _service = service;
         }
         [HttpGet]
@@ -31,6 +36,15 @@ namespace Player404_SoccerClubBackend.Controllers
         {
             var Player = await _service.GetAll();
             return Ok(_mapper.Map<IEnumerable<PlayerResultDto>>(Player));
+        }
+        [HttpGet]
+        [Route("[action]")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+       
+        public async Task<IActionResult> GetAllWithRelationship()
+        {
+            var Player = await _service.GetAllWithRelationship();
+            return Ok(Player);
         }
         [HttpGet]
         [Route("[action]")]
@@ -65,7 +79,7 @@ namespace Player404_SoccerClubBackend.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [Authorize]
-        public async Task<IActionResult> Add(PlayerDto PlayerDto)
+        public async Task<IActionResult> Add([FromForm]PlayerDto PlayerDto)
         {
             if (!ModelState.IsValid)
             {
@@ -88,6 +102,10 @@ namespace Player404_SoccerClubBackend.Controllers
             var PlayerResult = _mapper.Map<Player>(PlayerDto);
             PlayerResult.CreatedDate = LocalTime.GetTime();
             PlayerResult.CreatedBy = UserId;
+            if (PlayerDto.ProfilePic != null)
+            {
+                PlayerResult.ProfilePic = _file.Upload(PlayerDto.ProfilePic, "Team");
+            }
             var result = await _service.Add(PlayerResult);
 
             if (result == null) return BadRequest();
@@ -101,7 +119,7 @@ namespace Player404_SoccerClubBackend.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [Authorize]
-        public async Task<IActionResult> Update(PlayerDto PlayerDto)
+        public async Task<IActionResult> Update([FromForm]PlayerDto PlayerDto)
         {
 
             if (!ModelState.IsValid)
@@ -128,6 +146,14 @@ namespace Player404_SoccerClubBackend.Controllers
             ResultNew.UpdateDate = LocalTime.GetTime();
             ResultNew.CreatedBy = Result.CreatedBy;
             ResultNew.CreatedDate = Result.CreatedDate;
+            if (PlayerDto.ProfilePic != null)
+            {
+                ResultNew.ProfilePic = _file.Upload(PlayerDto.ProfilePic, "Team");
+            }
+            else
+            {
+                ResultNew.ProfilePic = Result.ProfilePic;
+            }
             await _service.Update(_mapper.Map<Player>(ResultNew));
 
             return Ok(PlayerDto);

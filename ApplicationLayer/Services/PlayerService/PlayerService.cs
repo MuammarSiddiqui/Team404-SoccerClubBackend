@@ -1,4 +1,6 @@
-﻿using DomainLayer.Models;
+﻿using AutoMapper;
+using DomainLayer.Dtos.Player;
+using DomainLayer.Models;
 using Infrastructure.Repositories.PlayerRepository;
 
 
@@ -7,10 +9,12 @@ namespace ApplicationLayer.Services.PlayerService
     public class PlayerService : IPlayerService
     {
         private readonly IPlayerRepository _repository;
+        private readonly IMapper _mapper;
 
-        public PlayerService(IPlayerRepository repository)
+        public PlayerService(IPlayerRepository repository,IMapper mapper)
         {
             _repository = repository;
+            _mapper = mapper;
         }
         public async Task<Player> Add(Player Player)
         {
@@ -35,6 +39,33 @@ namespace ApplicationLayer.Services.PlayerService
                 return (from u in Player.Where(r => r.Active == "Y")
                         select u).ToList();
             }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
+        public async Task<IEnumerable<PlayerResultDto>> GetAllWithRelationship()
+        {
+            try
+            {
+                var Player = await _repository.GetAllWithRelationship();
+                var lst = new List<PlayerResultDto>();
+                foreach (var item in Player)
+                {
+                    if (item.Active =="Y")
+                    {
+                        var obj = _mapper.Map<PlayerResultDto>(item);
+                        if (item.Team != null)
+                        {
+                            obj.Team = item.Team.Name;
+                        }
+                        lst.Add(obj);
+                    }
+                }
+                return lst;
+            }
+
             catch (Exception)
             {
 

@@ -34,7 +34,9 @@ namespace Team404_SoccerClubBackend.Controllers
         public async Task<IActionResult> GetAll()
         {
             var Team = await _service.GetAll();
-            return Ok(_mapper.Map<IEnumerable<TeamResultDto>>(Team));
+            var res = _mapper.Map<IEnumerable<TeamResultDto>>(Team);
+            res = res.OrderByDescending(x => x.Club).ToList();
+            return Ok(res);
         }
 
 
@@ -54,13 +56,30 @@ namespace Team404_SoccerClubBackend.Controllers
 
             return Ok(_mapper.Map<TeamResultDto>(TeamResult));
         }
+        
+        [HttpGet]
+        [Route("[action]")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<IActionResult> GetMyTeam()
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+            var TeamResult = await _service.GetMyTeam();
+
+            if (TeamResult == null) return BadRequest();
+
+            return Ok(_mapper.Map<TeamResultDto>(TeamResult));
+        }
 
         [HttpPost]
         [Route("[action]")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [Authorize]
-        public async Task<IActionResult> Add(TeamDto TeamDto)
+        public async Task<IActionResult> Add([FromForm]TeamDto TeamDto)
         {
             if (!ModelState.IsValid)
             {
@@ -130,6 +149,10 @@ namespace Team404_SoccerClubBackend.Controllers
             if (TeamDto.Logo != null)
             {
                 ResultNew.Logo = _file.Upload(TeamDto.Logo, "Team");
+            }
+            else
+            {
+                ResultNew.Logo = Result.Logo;
             }
             await _service.Update(_mapper.Map<Team>(ResultNew));
 

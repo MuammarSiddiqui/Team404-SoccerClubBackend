@@ -1,4 +1,5 @@
-﻿using ApplicationLayer.Services.CompetitionService;
+﻿using ApplicationLayer.Services.ClubHistoryService;
+using ApplicationLayer.Services.CompetitionService;
 using ApplicationLayer.Services.MatchesService;
 using ApplicationLayer.Services.MatchStatsService;
 using ApplicationLayer.Services.OrderItemService;
@@ -15,6 +16,7 @@ using ApplicationLayer.Services.TeamService;
 using ApplicationLayer.Services.TeamStatsService;
 using ApplicationLayer.Services.UsersService;
 using Infrastructure;
+using Infrastructure.Repositories.ClubHistoryRepository;
 using Infrastructure.Repositories.CompetitionRepository;
 using Infrastructure.Repositories.MatchesRepository;
 using Infrastructure.Repositories.MatchStatsRepository;
@@ -93,6 +95,11 @@ namespace Team404_SoccerClubBackend.Config
             //Roles
             services.AddScoped<IRoleRepository, RoleRepository>();
             services.AddScoped<IRoleService, RoleService>();
+
+
+            //ClubHistory
+            services.AddScoped<IClubHistoryRepository, ClubHistoryRepository>();
+            services.AddScoped<IClubHistoryService, ClubHistoryService>();
             
             //File
             services.AddScoped<IFileUpload, FileUpload>();

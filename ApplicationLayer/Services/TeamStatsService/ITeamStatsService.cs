@@ -11,5 +11,6 @@ namespace ApplicationLayer.Services.TeamStatsService
         Task<TeamStats> Remove(TeamStats TeamStats);
         Task<IEnumerable<TeamStats>> GetByTeamId(Guid id);
         Task<IEnumerable<TeamStats>> GetByMatchId(Guid id);
+        Task<TeamStats> GetByMatchAndTeam(Guid matchId, Guid teamId);
     }
 }

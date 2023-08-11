@@ -1,4 +1,6 @@
-﻿using DomainLayer.Models;
+﻿using AutoMapper;
+using DomainLayer.Dtos.Product;
+using DomainLayer.Models;
 using Infrastructure.Repositories.ProductRepository;
 
 
@@ -7,9 +9,10 @@ namespace ApplicationLayer.Services.ProductService
     public class ProductService : IProductService
     {
         private readonly IProductRepository _repository;
-
-        public ProductService(IProductRepository repository)
+        private readonly IMapper _mapper;
+        public ProductService(IProductRepository repository,IMapper mapper )
         {
+            _mapper = mapper;
             _repository = repository;
         }
         public async Task<Product> Add(Product Product)
@@ -41,6 +44,32 @@ namespace ApplicationLayer.Services.ProductService
                 throw;
             }
         }
+        public async Task<IEnumerable<ProductResultDto>> GetAllWithRelationship()
+        {
+            try
+            {
+                var lst = new List<ProductResultDto>();
+                var Product = await _repository.GetAllWithRelationship();
+                foreach (var item in Product)
+                {
+                    if (item.Active == "Y")
+                    {
+                        var obj = _mapper.Map<ProductResultDto>(item);
+                        if (item.ProductCategory != null)
+                        {
+                            obj.ProductCategory = item.ProductCategory.Name;
+                        }
+                        lst.Add(obj);
+                    }
+                }
+                return lst;
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
         
         public async Task<IEnumerable<Product>> GetByCategoryId(Guid Id)
         {
@@ -62,9 +91,17 @@ namespace ApplicationLayer.Services.ProductService
             Product res = await _repository.GetById(id);
             if (res == null || res.Active != "Y")
             {
-#pragma warning disable CS8603 // Possible null reference return.
                 return null;
-#pragma warning restore CS8603 // Possible null reference return.
+            }
+            return res;
+        }
+        
+        public async Task<Product> GetByIdWithCategory(Guid id)
+        {
+            Product res = await _repository.GetByIdWithCategory(id);
+            if (res == null || res.Active != "Y")
+            {
+                return null;
             }
             return res;
         }

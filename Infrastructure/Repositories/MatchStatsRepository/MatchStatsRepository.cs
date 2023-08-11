@@ -10,6 +10,7 @@ namespace Infrastructure.Repositories.MatchStatsRepository
         {
         }
 
+
         public async Task<IEnumerable<MatchStats>> GetByMatchId(Guid id)
         {
             return await DbSet.Where(x => x.MatchesId == id).ToListAsync();

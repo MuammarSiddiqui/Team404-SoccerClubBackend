@@ -8,8 +8,10 @@ namespace DomainLayer.Dtos.MatchStats
 {
     public class MatchStatsResultDto : BaseResultDto
     {
-        public DateTime? Date { get; set; }
-        public string? Stadium { get; set; }
+        public string? Goals { get; set; }
+        public string? Weather { get; set; }
+        public string? Details { get; set; }
+        public string? Winner { get; set; }
         public string? Attendance { get; set; }
         public Guid? MatchesId { get; set; }
         public string? Matches { get; set; }

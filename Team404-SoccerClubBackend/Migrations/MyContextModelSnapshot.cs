@@ -22,6 +22,47 @@ namespace Team404_SoccerClubBackend.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
+            modelBuilder.Entity("DomainLayer.Models.ClubHistory", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Active")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid?>("CreatedBy")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime?>("CreatedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("Date")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Image")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Title")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Title2")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("UpdateDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<Guid?>("UpdatedBy")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("TBL_ClubHistory");
+                });
+
             modelBuilder.Entity("DomainLayer.Models.Competition", b =>
                 {
                     b.Property<Guid>("Id")
@@ -73,8 +114,11 @@ namespace Team404_SoccerClubBackend.Migrations
                     b.Property<DateTime?>("CreatedDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<DateTime?>("Date")
-                        .HasColumnType("datetime2");
+                    b.Property<string>("Details")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Goals")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<Guid?>("MatchesId")
                         .HasColumnType("uniqueidentifier");
@@ -82,14 +126,17 @@ namespace Team404_SoccerClubBackend.Migrations
                     b.Property<Guid?>("ProductId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<string>("Stadium")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<DateTime?>("UpdateDate")
                         .HasColumnType("datetime2");
 
                     b.Property<Guid?>("UpdatedBy")
                         .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Weather")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Winner")
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
@@ -118,15 +165,14 @@ namespace Team404_SoccerClubBackend.Migrations
                     b.Property<DateTime?>("CreatedDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("Date")
-                        .IsRequired()
+                    b.Property<DateTime>("DateTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Stadium")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<Guid?>("TeamId")
                         .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("Time")
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime?>("UpdateDate")
                         .HasColumnType("datetime2");
@@ -140,7 +186,7 @@ namespace Team404_SoccerClubBackend.Migrations
 
                     b.HasIndex("TeamId");
 
-                    b.ToTable("Matches");
+                    b.ToTable("TBL_Matches");
                 });
 
             modelBuilder.Entity("DomainLayer.Models.Order", b =>
@@ -248,6 +294,9 @@ namespace Team404_SoccerClubBackend.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Position")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ProfilePic")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<Guid?>("TeamId")
@@ -554,6 +603,9 @@ namespace Team404_SoccerClubBackend.Migrations
 
                     b.Property<string>("Active")
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool?>("Club")
+                        .HasColumnType("bit");
 
                     b.Property<string>("Country")
                         .HasColumnType("nvarchar(max)");

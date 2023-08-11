@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using DomainLayer.Dtos.ClubHistory;
 using DomainLayer.Dtos.Competition;
 using DomainLayer.Dtos.Matches;
 using DomainLayer.Dtos.MatchStats;
@@ -86,6 +87,10 @@ namespace Team404_SoccerClubBackend.Config
             //Competition Mapping
             CreateMap<Competition, CompetitionDto>().ReverseMap();
             CreateMap<Competition, CompetitionResultDto>().ReverseMap();
+
+            //ClubHistory Mapping
+            CreateMap<ClubHistory, ClubHistoryDto>().ReverseMap();
+            CreateMap<ClubHistory, ClubHistoryResultDto>().ReverseMap();
         }
     }
 }

@@ -1,7 +1,6 @@
 ﻿using ApplicationLayer.Services.RoleService;
 using ApplicationLayer.Services.UsersService;
 using AutoMapper;
-using Azure.Core;
 using DomainLayer.Dtos.UsersDto;
 using DomainLayer.Models;
 using Microsoft.AspNetCore.Authorization;
@@ -11,7 +10,7 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Security.Cryptography;
 using Team404_SoccerClubBackend.Config;
-using Team404_SoccerClubBackend.Config.File;
+using Team404_SoccerClubBackend.Config.File; 
 
 namespace Team404_SoccerClubBackend.Controllers
 {
@@ -178,11 +177,11 @@ namespace Team404_SoccerClubBackend.Controllers
 
                     var tokenHandler = new JwtSecurityTokenHandler();
                     var newtoken = tokenHandler.WriteToken(token);
-                    var refreshToken = GenerateRefreshToken();
 
                     var cred = new
                     {
                         token = newtoken,
+                        User = _mapper.Map<UsersResultDto>(Users)
                     };
                     await _service.Update(Users);
                     return Ok(cred);
@@ -242,13 +241,7 @@ namespace Team404_SoccerClubBackend.Controllers
 
             return Task.FromResult(token);
         }
-        private static string GenerateRefreshToken()
-        {
-            var randomNumber = new byte[64];
-            using var rng = RandomNumberGenerator.Create();
-            rng.GetBytes(randomNumber);
-            return Convert.ToBase64String(randomNumber);
-        }
+      
 
 
 

@@ -6,6 +6,7 @@ namespace DomainLayer.Dtos.Team
     {
         public Guid? Id { get; set; }
         public string Name { get; set; }
+        public bool? Club { get; set; }
         public string? Description { get; set; }
         public string? Country { get; set; }
         public IFormFile? Logo { get; set; }

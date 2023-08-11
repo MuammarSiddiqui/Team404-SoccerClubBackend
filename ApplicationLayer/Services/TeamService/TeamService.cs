@@ -47,9 +47,17 @@ namespace ApplicationLayer.Services.TeamService
             Team res = await _repository.GetById(id);
             if (res == null || res.Active != "Y")
             {
-#pragma warning disable CS8603 // Possible null reference return.
                 return null;
-#pragma warning restore CS8603 // Possible null reference return.
+            }
+            return res;
+        }
+        
+        public async Task<Team> GetMyTeam()
+        {
+            Team res = await _repository.GetMyTeam();
+            if (res == null || res.Active != "Y")
+            {
+                return null;
             }
             return res;
         }

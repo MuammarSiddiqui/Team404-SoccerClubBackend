@@ -6,6 +6,7 @@ namespace ApplicationLayer.Services.TeamService
     {
         Task<IEnumerable<Team>> GetAll();
         Task<Team> GetById(Guid id);
+        Task<Team> GetMyTeam();
         Task<Team> Add(Team Team);
         Task<Team> Update(Team Team);
         Task<Team> Remove(Team Team);

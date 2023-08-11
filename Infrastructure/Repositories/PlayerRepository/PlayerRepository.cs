@@ -10,6 +10,11 @@ namespace Infrastructure.Repositories.PlayerRepository
         {
         }
 
+        public async Task<IEnumerable<Player>> GetAllWithRelationship()
+        {
+            return await DbSet.Include(x=>x.Team).ToListAsync();
+        }
+
         public async Task<IEnumerable<Player>> GetByTeamId(Guid id)
         {
             return await DbSet.Where(x => x.TeamId == id).ToListAsync();

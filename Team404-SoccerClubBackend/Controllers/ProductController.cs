@@ -40,6 +40,15 @@ namespace Product404_SoccerClubBackend.Controllers
         [Route("[action]")]
         [ProducesResponseType(StatusCodes.Status200OK)]
        
+        public async Task<IActionResult> GetAllWithRelationship()
+        {
+            var Product = await _service.GetAllWithRelationship();
+            return Ok(Product);
+        }
+        [HttpGet]
+        [Route("[action]")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+       
         public async Task<IActionResult> GetByCategoryId(Guid Id)
         {
             var Product = await _service.GetByCategoryId(Id);
@@ -62,6 +71,23 @@ namespace Product404_SoccerClubBackend.Controllers
             if (ProductResult == null) return BadRequest();
 
             return Ok(_mapper.Map<ProductResultDto>(ProductResult));
+        }
+        
+        [HttpGet]
+        [Route("[action]")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<IActionResult> GetByIdWithCategory(Guid id)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+            var ProductResult = await _service.GetByIdWithCategory(id);
+
+            if (ProductResult == null) return BadRequest();
+
+            return Ok(ProductResult);
         }
 
         [HttpPost]
@@ -139,6 +165,10 @@ namespace Product404_SoccerClubBackend.Controllers
             if (ProductDto.ImageUrl != null)
             {
                 ResultNew.ImageUrl = _file.Upload(ProductDto.ImageUrl, "Product");
+            }
+            else
+            {
+                ResultNew.ImageUrl = Result.ImageUrl;
             }
             await _service.Update(_mapper.Map<Product>(ResultNew));
 

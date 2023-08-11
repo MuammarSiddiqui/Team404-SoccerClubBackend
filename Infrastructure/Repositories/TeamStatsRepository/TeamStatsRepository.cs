@@ -10,6 +10,11 @@ namespace Infrastructure.Repositories.TeamStatsRepository
         {
         }
 
+        public async Task<TeamStats> GetByMatchAndTeam(Guid matchId, Guid teamId)
+        {
+            return await DbSet.Where(x => x.MatchesId == matchId && x.TeamId == teamId).FirstOrDefaultAsync();
+        }
+
         public async Task<IEnumerable<TeamStats>> GetByMatchId(Guid id)
         {
             return await DbSet.Where(x => x.MatchesId == id).ToListAsync();

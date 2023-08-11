@@ -185,6 +185,10 @@ namespace PlayerImages404_SoccerClubBackend.Controllers
             {
                 ResultNew.ImageUrl = _file.Upload(PlayerImagesDto.ImageUrl, "PlayerImages");
             }
+            else
+            {
+                ResultNew.ImageUrl = Result.ImageUrl;
+            }
             await _service.Update(_mapper.Map<PlayerImages>(ResultNew));
 
             return Ok(PlayerImagesDto);

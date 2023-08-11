@@ -131,6 +131,10 @@ namespace SoccerInfo404_SoccerClubBackend.Controllers
             {
                 ResultNew.Image = _file.Upload(SoccerInfoDto.Image, "SoccerInfo");
             }
+            else
+            {
+                ResultNew.Image = Result.Image;
+            }
             await _service.Update(_mapper.Map<SoccerInfo>(ResultNew));
 
             return Ok(SoccerInfoDto);

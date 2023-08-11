@@ -1,5 +1,6 @@
 ﻿using DomainLayer.Models;
 using Infrastructure.Repositories.TeamStatsRepository;
+using System.Text.RegularExpressions;
 
 
 namespace ApplicationLayer.Services.TeamStatsService
@@ -78,9 +79,17 @@ namespace ApplicationLayer.Services.TeamStatsService
             TeamStats res = await _repository.GetById(id);
             if (res == null || res.Active != "Y")
             {
-#pragma warning disable CS8603 // Possible null reference return.
                 return null;
-#pragma warning restore CS8603 // Possible null reference return.
+            }
+            return res;
+        }
+        
+        public async Task<TeamStats> GetByMatchAndTeam(Guid MatchId,Guid TeamId)
+        {
+            TeamStats res = await _repository.GetByMatchAndTeam(MatchId, TeamId);
+            if (res == null || res.Active != "Y")
+            {
+                return null;
             }
             return res;
         }
