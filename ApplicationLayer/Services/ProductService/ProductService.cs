@@ -58,8 +58,12 @@ namespace ApplicationLayer.Services.ProductService
                         if (item.ProductCategory != null)
                         {
                             obj.ProductCategory = item.ProductCategory.Name;
+                            if (item.ProductCategory.Active =="Y")
+                            {
+                                lst.Add(obj);
+                            }
                         }
-                        lst.Add(obj);
+                        
                     }
                 }
                 return lst;

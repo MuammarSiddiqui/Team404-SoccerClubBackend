@@ -41,27 +41,16 @@ namespace ApplicationLayer.Services.PlayerStatsService
                 throw;
             }
         }
-        public async Task<IEnumerable<PlayerStats>> GetByMatchId(Guid Id)
+        public async Task<PlayerStats> GetByPlayerId(Guid Id)
         {
             try
             {
-                var PlayerStats = await _repository.GetByMatchId(Id);
-                return (from u in PlayerStats.Where(r => r.Active == "Y")
-                        select u).ToList();
-            }
-            catch (Exception)
-            {
-
-                throw;
-            }
-        }
-        public async Task<IEnumerable<PlayerStats>> GetByPlayerId(Guid Id)
-        {
-            try
-            {
-                var PlayerStats = await _repository.GetByPlayerId(Id);
-                return (from u in PlayerStats.Where(r => r.Active == "Y")
-                        select u).ToList();
+                var res = await _repository.GetByPlayerId(Id);
+                if (res == null || res.Active != "Y")
+                {
+                    return null;
+                }
+                return res; ;
             }
             catch (Exception)
             {

@@ -1,11 +1,14 @@
-﻿using ApplicationLayer.Services.RoleService;
+﻿using ApplicationLayer.Services.CartService;
+using ApplicationLayer.Services.RoleService;
 using ApplicationLayer.Services.UsersService;
 using AutoMapper;
+using DomainLayer.Dtos.Cart;
 using DomainLayer.Dtos.UsersDto;
 using DomainLayer.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
+using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Security.Cryptography;
@@ -21,11 +24,13 @@ namespace Team404_SoccerClubBackend.Controllers
         private readonly IUsersService _service;
         private readonly IRoleService _rolesService;
         private readonly IMapper _mapper;
+        private readonly ICartService _cart;
         private readonly IFileUpload _file;
         public UsersController(IUsersService service,
-            IMapper mapper, IRoleService rolesService,IFileUpload file)
+            IMapper mapper, IRoleService rolesService,IFileUpload file,ICartService cart)
         {
             _service = service;
+            _cart = cart;
             _mapper = mapper;
             _file = file;
             _rolesService = rolesService;
@@ -59,6 +64,50 @@ namespace Team404_SoccerClubBackend.Controllers
             {
                 token = newtoken,
                 Users = _mapper.Map<UsersResultDto>(Users),
+            };
+            await _service.Update(Users);
+            return Ok(cred);
+        }
+        
+        [HttpPost]
+        [Route("[action]")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<ActionResult<object>> LoginWithCartAdd(UsersLoginWithCartDto request)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+            Users Users = await _service.Get(request.Username);
+
+            if (Users == null)
+
+            {
+                return BadRequest("Users not found");
+            }
+            if (!VerifyPasswordHash(request.Password, Users.PasswordHash, Users.PasswordSalt))
+            {
+                return BadRequest("wrong password");
+            }
+            var list = new List<Cart>();
+            foreach (var item in request.Cart)
+            {
+                var CartResult = _mapper.Map<Cart>(item);
+                CartResult.CreatedDate = LocalTime.GetTime();
+                CartResult.CreatedBy = Users.Id;
+                list.Add(CartResult);
+            }
+            var result = await _cart.AddRange(list);
+
+            var token = await CreateToken(Users);
+            var tokenHandler = new JwtSecurityTokenHandler();
+            var newtoken = tokenHandler.WriteToken(token);
+            var cred = new
+            {
+                token = newtoken,
+                Users = _mapper.Map<UsersResultDto>(Users),
+                Cart = result
             };
             await _service.Update(Users);
             return Ok(cred);
@@ -112,6 +161,7 @@ namespace Team404_SoccerClubBackend.Controllers
             checkUsersbyid.Name = obj.Name;
             checkUsersbyid.Username = obj.Username;
             checkUsersbyid.Email = obj.Email;
+            checkUsersbyid.ContactNumber = obj.ContactNumber;
             checkUsersbyid.Active = "Y";
             if (obj.ProfilePic != null)
             {
@@ -173,6 +223,74 @@ namespace Team404_SoccerClubBackend.Controllers
                        Users.ProfilePic = _file.Upload(request.ProfilePic, "Users");
                     }
                     await _service.Add(Users);
+                    var token = await CreateToken(Users);
+
+                    var tokenHandler = new JwtSecurityTokenHandler();
+                    var newtoken = tokenHandler.WriteToken(token);
+
+                    var cred = new
+                    {
+                        token = newtoken,
+                        User = _mapper.Map<UsersResultDto>(Users)
+                    };
+                    await _service.Update(Users);
+                    return Ok(cred);
+                }
+                else
+                {
+                    return BadRequest("Usersname Already Exists");
+                }
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message.ToString());
+            }
+        }
+        [HttpPost("RegisterWithCart")]
+        public async Task<IActionResult> RegisterWithCart([FromForm]UsersDtoWithCart request)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+            try
+            {
+                var checkUsers = await _service.Get(request.Username);
+                if (!string.IsNullOrEmpty(request.Email))
+                {
+                    var checkUsersbyemail = await _service.Get(request.Email);
+                    if (checkUsersbyemail != null)
+                    {
+                        return BadRequest("Email Already Exists");
+                    }
+                }
+                if (checkUsers == null)
+                {
+                    Users Users = new();
+                    CreatePasswordHash(request.Password, out byte[] passwordHash, out byte[] passwordSalt);
+                    Users.Username = request.Username;
+                    Users.Name = request.Name;
+                    Users.Email = request.Email ?? "";
+                    Users.RoleId = request.RoleId;
+                    Users.PasswordHash = passwordHash;
+                    Users.PasswordSalt = passwordSalt;
+                    Users.CreatedDate = LocalTime.GetTime();
+                    Users.Active = "Y";
+                    if (request.ProfilePic !=null )
+                    {
+                       Users.ProfilePic = _file.Upload(request.ProfilePic, "Users");
+                    }
+                    await _service.Add(Users);
+                    var list = new List<Cart>();
+                    foreach (var item in request.Cart)
+                    {
+                        var CartResult = _mapper.Map<Cart>(item);
+                        CartResult.CreatedDate = LocalTime.GetTime();
+                        CartResult.CreatedBy = Users?.Id;
+                        list.Add(CartResult);
+                    }
+                    var result = await _cart.AddRange(list);
+
                     var token = await CreateToken(Users);
 
                     var tokenHandler = new JwtSecurityTokenHandler();

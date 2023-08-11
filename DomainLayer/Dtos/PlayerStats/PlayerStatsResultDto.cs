@@ -15,7 +15,5 @@ namespace DomainLayer.Dtos.PlayerStats
         public decimal? MinutesPlayed { get; set; }
         public Guid? PlayerId { get; set; }
         public string? Player { get; set; }
-        public Guid? MatchesId { get; set; }
-        public string? Matches { get; set; }
     }
 }

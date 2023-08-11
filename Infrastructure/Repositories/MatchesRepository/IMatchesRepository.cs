@@ -9,5 +9,6 @@ namespace Infrastructure.Repositories.MatchesRepository
         Task<IEnumerable<Matches>> GetAllWithRelationship();
         Task<Matches> GetByCurrentDate(DateTime date);
         Task<IEnumerable<Matches>> GetByTeamId(Guid id);
+        Task<Matches> GetByIdWithRelationship(Guid id);
     }
 }

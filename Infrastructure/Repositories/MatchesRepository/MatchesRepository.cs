@@ -29,5 +29,9 @@ namespace Infrastructure.Repositories.MatchesRepository
         {
             return await DbSet.Where(x => x.TeamId == id).AsNoTracking().ToListAsync();
         }
+        public async Task<Matches> GetByIdWithRelationship(Guid id)
+        {
+            return await DbSet.Include(x=>x.Team).Include(x=>x.Competition).Where(x => x.Id == id).AsNoTracking().FirstOrDefaultAsync();
+        }
     }
 }

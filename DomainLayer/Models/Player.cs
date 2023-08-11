@@ -8,6 +8,9 @@ namespace DomainLayer.Models
         public string? Position { get; set; }
         public string? ProfilePic { get; set; }
         public DateTime? DOB { get; set; }
+        public string? ShirtNumber { get; set; }
+        public string? Height { get; set; }
+        public string? Weight { get; set; }
         public Guid? TeamId { get; set; }
         public Team? Team { get; set; }
         public List<PlayerImages>? PlayerImages { get; set; } = new List<PlayerImages>();

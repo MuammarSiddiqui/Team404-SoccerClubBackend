@@ -102,6 +102,24 @@ namespace ApplicationLayer.Services.MatchesService
             }
             return res;
         }
+        public async Task<MatchesResultDto> GetByIdWithRelationship(Guid id)
+        {
+            Matches res = await _repository.GetByIdWithRelationship(id);
+            if (res == null || res.Active != "Y")
+            {
+                return null;
+            }
+            var obj =  _mapper.Map<MatchesResultDto>(res);
+            if (res.Team!=null)
+            {
+                obj.Team = res.Team.Name;
+            }
+            if (res.Competition!=null)
+            {
+                obj.Competition = res.Competition.Name;
+            }
+            return obj;
+        }
         public async Task<Matches> GetByCurrentDate(DateTime Date)
         {
             Matches res = await _repository.GetByCurrentDate(Date);

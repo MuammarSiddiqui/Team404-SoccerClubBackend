@@ -14,6 +14,7 @@ namespace DomainLayer.Dtos.UsersDto
         public string? ContactNumber { get; set; }
         public string? ProfilePic { get; set; }
         public Guid? RoleId { get; set; }
+        public string? Address { get; set; }
         public string? Role { get; set; }
     }
 }

@@ -1,11 +1,11 @@
 ﻿using DomainLayer.Models;
 using Infrastructure.Repositories.BaseRepository;
 
-namespace Infrastructure.Repositories.ClubHistoryRepository
+namespace Infrastructure.Repositories.SoccerInfoRepository
 {
-    public class ClubHistoryRepository : Repository<ClubHistory>, IClubHistoryRepository
+    public class SoccerInfoRepository : Repository<SoccerInfo>, ISoccerInfoRepository
     {
-        public ClubHistoryRepository(MyContext db) : base(db)
+        public SoccerInfoRepository(MyContext db) : base(db)
         {
         }
     }

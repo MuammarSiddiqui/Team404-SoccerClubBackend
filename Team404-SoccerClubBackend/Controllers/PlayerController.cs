@@ -46,6 +46,9 @@ namespace Player404_SoccerClubBackend.Controllers
             var Player = await _service.GetAllWithRelationship();
             return Ok(Player);
         }
+
+
+
         [HttpGet]
         [Route("[action]")]
         [ProducesResponseType(StatusCodes.Status200OK)]

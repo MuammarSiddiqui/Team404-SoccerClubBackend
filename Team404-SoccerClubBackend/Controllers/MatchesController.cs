@@ -59,6 +59,7 @@ namespace Matches404_SoccerClubBackend.Controllers
             {
                 Today = res.Where(x => x.DateTime.Date == DateTime.Now.Date),
                 Upcoming = res.Where(x => x.DateTime.Date > DateTime.Now.Date),
+                Previous = res.Where(x => x.DateTime.Date < DateTime.Now.Date),
                 UpcomingRecent = upcoming.OrderByDescending(x => x.DateTime).FirstOrDefault()
             };
             return Ok(obj);
@@ -76,6 +77,23 @@ namespace Matches404_SoccerClubBackend.Controllers
                 return BadRequest(ModelState);
             }
             var MatchesResult = await _service.GetById(id);
+
+            if (MatchesResult == null) return BadRequest();
+
+            return Ok(_mapper.Map<MatchesResultDto>(MatchesResult));
+        }
+        
+        [HttpGet]
+        [Route("[action]")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<IActionResult> GetByIdWithRelationship(Guid id)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+            var MatchesResult = await _service.GetByIdWithRelationship(id);
 
             if (MatchesResult == null) return BadRequest();
 

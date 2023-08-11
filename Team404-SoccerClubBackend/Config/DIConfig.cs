@@ -1,4 +1,5 @@
-﻿using ApplicationLayer.Services.ClubHistoryService;
+﻿using ApplicationLayer.Services.CartService;
+using ApplicationLayer.Services.ClubHistoryService;
 using ApplicationLayer.Services.CompetitionService;
 using ApplicationLayer.Services.MatchesService;
 using ApplicationLayer.Services.MatchStatsService;
@@ -14,8 +15,10 @@ using ApplicationLayer.Services.RoleService;
 using ApplicationLayer.Services.SoccerInfoService;
 using ApplicationLayer.Services.TeamService;
 using ApplicationLayer.Services.TeamStatsService;
+using ApplicationLayer.Services.UserAddressesService;
 using ApplicationLayer.Services.UsersService;
 using Infrastructure;
+using Infrastructure.Repositories.CartRepository;
 using Infrastructure.Repositories.ClubHistoryRepository;
 using Infrastructure.Repositories.CompetitionRepository;
 using Infrastructure.Repositories.MatchesRepository;
@@ -32,6 +35,7 @@ using Infrastructure.Repositories.RoleRepository;
 using Infrastructure.Repositories.SoccerInfoRepository;
 using Infrastructure.Repositories.TeamRepository;
 using Infrastructure.Repositories.TeamStatsRepository;
+using Infrastructure.Repositories.UserAddressesRepository;
 using Infrastructure.Repositories.UsersReposiotry;
 using Team404_SoccerClubBackend.Config.File;
 
@@ -100,6 +104,17 @@ namespace Team404_SoccerClubBackend.Config
             //ClubHistory
             services.AddScoped<IClubHistoryRepository, ClubHistoryRepository>();
             services.AddScoped<IClubHistoryService, ClubHistoryService>();
+
+
+
+            //Cart
+            services.AddScoped<ICartRepository, CartRepository>();
+            services.AddScoped<ICartService, CartService>();
+
+
+            //UserAddresses
+            services.AddScoped<IUserAddressesRepository, UserAddressesRepository>();
+            services.AddScoped<IUserAddressesService, UserAddressesService>();
             
             //File
             services.AddScoped<IFileUpload, FileUpload>();

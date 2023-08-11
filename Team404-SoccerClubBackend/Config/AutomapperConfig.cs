@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using DomainLayer.Dtos.Cart;
 using DomainLayer.Dtos.ClubHistory;
 using DomainLayer.Dtos.Competition;
 using DomainLayer.Dtos.Matches;
@@ -15,6 +16,7 @@ using DomainLayer.Dtos.RoleDto;
 using DomainLayer.Dtos.SoccerInfo;
 using DomainLayer.Dtos.Team;
 using DomainLayer.Dtos.TeamStats;
+using DomainLayer.Dtos.UserAddresses;
 using DomainLayer.Dtos.UsersDto;
 using DomainLayer.Models;
 
@@ -91,6 +93,14 @@ namespace Team404_SoccerClubBackend.Config
             //ClubHistory Mapping
             CreateMap<ClubHistory, ClubHistoryDto>().ReverseMap();
             CreateMap<ClubHistory, ClubHistoryResultDto>().ReverseMap();
+
+            //Cart Mapping
+            CreateMap<Cart, CartDto>().ReverseMap();
+            CreateMap<Cart, CartResultDto>().ReverseMap();
+
+            //UserAddresses Mapping
+            CreateMap<UserAddresses, UserAddressesDto>().ReverseMap();
+            CreateMap<UserAddresses, UserAddressesResultDto>().ReverseMap();
         }
     }
 }

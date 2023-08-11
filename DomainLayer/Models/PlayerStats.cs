@@ -15,7 +15,5 @@ namespace DomainLayer.Models
         public decimal? MinutesPlayed { get; set; }
         public Guid? PlayerId { get; set; }
         public Player? Player { get; set; }
-        public Guid? MatchesId { get; set; }
-        public Matches? Matches { get; set; }
     }
 }

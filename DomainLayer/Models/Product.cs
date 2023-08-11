@@ -10,7 +10,6 @@ namespace DomainLayer.Models
         public decimal Price { get; set; }
         public string ImageUrl { get; set; }
         public int StockQuantity { get; set; }
-        public List<MatchStats> MatchStats { get; set; } = new List<MatchStats>();
     }
 
 }

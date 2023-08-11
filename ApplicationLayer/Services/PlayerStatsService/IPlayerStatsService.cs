@@ -9,7 +9,6 @@ namespace ApplicationLayer.Services.PlayerStatsService
         Task<PlayerStats> Add(PlayerStats PlayerStats);
         Task<PlayerStats> Update(PlayerStats PlayerStats);
         Task<PlayerStats> Remove(PlayerStats PlayerStats);
-        Task<IEnumerable<PlayerStats>> GetByMatchId(Guid id);
-        Task<IEnumerable<PlayerStats>> GetByPlayerId(Guid id);
+        Task<PlayerStats> GetByPlayerId(Guid id);
     }
 }

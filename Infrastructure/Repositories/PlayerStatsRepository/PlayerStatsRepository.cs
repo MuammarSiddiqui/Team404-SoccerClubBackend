@@ -10,14 +10,9 @@ namespace Infrastructure.Repositories.PlayerStatsRepository
         {
         }
 
-        public async Task<IEnumerable<PlayerStats>> GetByMatchId(Guid id)
+        public async Task<PlayerStats> GetByPlayerId(Guid id)
         {
-            return await DbSet.Where(x => x.MatchesId == id).ToListAsync();
-        }
-
-        public async Task<IEnumerable<PlayerStats>> GetByPlayerId(Guid id)
-        {
-            return await DbSet.Where(x => x.PlayerId == id).ToListAsync();
+            return await DbSet.Where(x => x.PlayerId == id).AsNoTracking().FirstOrDefaultAsync();
         }
     }
 }

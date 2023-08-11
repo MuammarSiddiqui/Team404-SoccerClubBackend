@@ -14,5 +14,6 @@ namespace ApplicationLayer.Services.MatchesService
         Task<Matches> Remove(Matches Matches);
         Task<IEnumerable<Matches>> GetByTeamId(Guid id);
         Task<IEnumerable<Matches>> GetByCompetitionId(Guid id);
+        Task<MatchesResultDto> GetByIdWithRelationship(Guid id);
     }
 }

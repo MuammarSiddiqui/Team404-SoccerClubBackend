@@ -40,19 +40,9 @@ namespace PlayerStats404_SoccerClubBackend.Controllers
         public async Task<IActionResult> GetByPlayerId(Guid Id)
         {
             var PlayerStats = await _service.GetByPlayerId(Id);
-            return Ok(_mapper.Map<IEnumerable<PlayerStatsResultDto>>(PlayerStats));
+            return Ok(_mapper.Map<PlayerStatsResultDto>(PlayerStats));
         }
         
-        [HttpGet]
-        [Route("[action]")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-       
-        public async Task<IActionResult> GetByMatchId(Guid Id)
-        {
-            var PlayerStats = await _service.GetByMatchId(Id);
-            return Ok(_mapper.Map<IEnumerable<PlayerStatsResultDto>>(PlayerStats));
-        }
-
 
         [HttpGet]
         [Route("[action]")]
@@ -96,14 +86,29 @@ namespace PlayerStats404_SoccerClubBackend.Controllers
                     return Unauthorized();
                 }
             }
+
+            var check = await _service.GetByPlayerId((Guid)PlayerStatsDto.PlayerId);
+
             var PlayerStatsResult = _mapper.Map<PlayerStats>(PlayerStatsDto);
             PlayerStatsResult.CreatedDate = LocalTime.GetTime();
             PlayerStatsResult.CreatedBy = UserId;
-            var result = await _service.Add(PlayerStatsResult);
+            if (check != null)
+            {
+                PlayerStatsResult.Id = check.Id;
+                var result = await _service.Update(PlayerStatsResult);
 
-            if (result == null) return BadRequest();
+                if (result == null) return BadRequest();
 
-            return Ok(_mapper.Map<PlayerStatsResultDto>(result));
+                return Ok(_mapper.Map<PlayerStatsResultDto>(result));
+            }
+            else
+            {
+                var result = await _service.Add(PlayerStatsResult);
+
+                if (result == null) return BadRequest();
+
+                return Ok(_mapper.Map<PlayerStatsResultDto>(result));
+            }
         }
 
 

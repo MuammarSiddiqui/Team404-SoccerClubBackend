@@ -22,6 +22,45 @@ namespace Team404_SoccerClubBackend.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
+            modelBuilder.Entity("DomainLayer.Models.Cart", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Active")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid?>("CreatedBy")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime?>("CreatedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<Guid?>("ProductId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<int?>("Quantity")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime?>("UpdateDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<Guid?>("UpdatedBy")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid?>("UsersId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ProductId");
+
+                    b.HasIndex("UsersId");
+
+                    b.ToTable("TBL_Cart");
+                });
+
             modelBuilder.Entity("DomainLayer.Models.ClubHistory", b =>
                 {
                     b.Property<Guid>("Id")
@@ -123,9 +162,6 @@ namespace Team404_SoccerClubBackend.Migrations
                     b.Property<Guid?>("MatchesId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid?>("ProductId")
-                        .HasColumnType("uniqueidentifier");
-
                     b.Property<DateTime?>("UpdateDate")
                         .HasColumnType("datetime2");
 
@@ -141,8 +177,6 @@ namespace Team404_SoccerClubBackend.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("MatchesId");
-
-                    b.HasIndex("ProductId");
 
                     b.ToTable("TBL_MatchStats");
                 });
@@ -250,9 +284,6 @@ namespace Team404_SoccerClubBackend.Migrations
                     b.Property<int?>("Quantity")
                         .HasColumnType("int");
 
-                    b.Property<decimal?>("UnitPrice")
-                        .HasColumnType("decimal(18,2)");
-
                     b.Property<DateTime?>("UpdateDate")
                         .HasColumnType("datetime2");
 
@@ -286,6 +317,9 @@ namespace Team404_SoccerClubBackend.Migrations
                     b.Property<DateTime?>("DOB")
                         .HasColumnType("datetime2");
 
+                    b.Property<string>("Height")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -299,6 +333,9 @@ namespace Team404_SoccerClubBackend.Migrations
                     b.Property<string>("ProfilePic")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("ShirtNumber")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<Guid?>("TeamId")
                         .HasColumnType("uniqueidentifier");
 
@@ -307,6 +344,9 @@ namespace Team404_SoccerClubBackend.Migrations
 
                     b.Property<Guid?>("UpdatedBy")
                         .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Weight")
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
@@ -418,9 +458,6 @@ namespace Team404_SoccerClubBackend.Migrations
                     b.Property<int?>("Goals")
                         .HasColumnType("int");
 
-                    b.Property<Guid?>("MatchesId")
-                        .HasColumnType("uniqueidentifier");
-
                     b.Property<decimal?>("MinutesPlayed")
                         .HasColumnType("decimal(18,2)");
 
@@ -440,8 +477,6 @@ namespace Team404_SoccerClubBackend.Migrations
                         .HasColumnType("int");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("MatchesId");
 
                     b.HasIndex("PlayerId");
 
@@ -743,15 +778,26 @@ namespace Team404_SoccerClubBackend.Migrations
                     b.ToTable("TBL_Users");
                 });
 
+            modelBuilder.Entity("DomainLayer.Models.Cart", b =>
+                {
+                    b.HasOne("DomainLayer.Models.Product", "Product")
+                        .WithMany()
+                        .HasForeignKey("ProductId");
+
+                    b.HasOne("DomainLayer.Models.Users", "Users")
+                        .WithMany()
+                        .HasForeignKey("UsersId");
+
+                    b.Navigation("Product");
+
+                    b.Navigation("Users");
+                });
+
             modelBuilder.Entity("DomainLayer.Models.MatchStats", b =>
                 {
                     b.HasOne("DomainLayer.Models.Matches", "Matches")
                         .WithMany("MatchStats")
                         .HasForeignKey("MatchesId");
-
-                    b.HasOne("DomainLayer.Models.Product", null)
-                        .WithMany("MatchStats")
-                        .HasForeignKey("ProductId");
 
                     b.Navigation("Matches");
                 });
@@ -830,15 +876,9 @@ namespace Team404_SoccerClubBackend.Migrations
 
             modelBuilder.Entity("DomainLayer.Models.PlayerStats", b =>
                 {
-                    b.HasOne("DomainLayer.Models.Matches", "Matches")
-                        .WithMany()
-                        .HasForeignKey("MatchesId");
-
                     b.HasOne("DomainLayer.Models.Player", "Player")
                         .WithMany("PlayerStats")
                         .HasForeignKey("PlayerId");
-
-                    b.Navigation("Matches");
 
                     b.Navigation("Player");
                 });
@@ -893,11 +933,6 @@ namespace Team404_SoccerClubBackend.Migrations
                     b.Navigation("PlayerImages");
 
                     b.Navigation("PlayerStats");
-                });
-
-            modelBuilder.Entity("DomainLayer.Models.Product", b =>
-                {
-                    b.Navigation("MatchStats");
                 });
 
             modelBuilder.Entity("DomainLayer.Models.ProductCategory", b =>
