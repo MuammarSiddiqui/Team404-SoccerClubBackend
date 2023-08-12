@@ -7,6 +7,7 @@ namespace Infrastructure.Repositories.TeamStatsRepository
     {
         Task<TeamStats> GetByMatchAndTeam(Guid matchId, Guid teamId);
         Task<IEnumerable<TeamStats>> GetByMatchId(Guid id);
+        Task<IEnumerable<TeamStats>> GetAllWithRelationShip();
         Task<IEnumerable<TeamStats>> GetByTeamId(Guid id);
     }
 }

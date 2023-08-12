@@ -1,4 +1,6 @@
-﻿using DomainLayer.Models;
+﻿using AutoMapper;
+using DomainLayer.Dtos.UsersDto;
+using DomainLayer.Models;
 using Infrastructure.Repositories.UsersReposiotry;
 
 namespace ApplicationLayer.Services.UsersService
@@ -6,9 +8,10 @@ namespace ApplicationLayer.Services.UsersService
     public class UsersService : IUsersService
     {
         private readonly IUsersRepository _repository;
-
-        public UsersService(IUsersRepository repository)
+        private readonly IMapper _mapper;
+        public UsersService(IUsersRepository repository,IMapper mapper)
         {
+            _mapper = mapper;
             _repository = repository;
         }
         public async Task<Users> Add(Users User)
@@ -31,9 +34,7 @@ namespace ApplicationLayer.Services.UsersService
             Users res = await _repository.Get(Username);
             if (res == null || res.Active != "Y")
             {
-#pragma warning disable CS8603 // Possible null reference return.
                 return null;
-#pragma warning restore CS8603 // Possible null reference return.
             }
             return res;
         }
@@ -43,9 +44,7 @@ namespace ApplicationLayer.Services.UsersService
             Users res = await _repository.GetByEmail(email);
             if (res == null || res.Active != "Y")
             {
-#pragma warning disable CS8603 // Possible null reference return.
                 return null;
-#pragma warning restore CS8603 // Possible null reference return.
             }
             return res;
         }
@@ -64,15 +63,37 @@ namespace ApplicationLayer.Services.UsersService
                 throw;
             }
         }
+        
+        public async Task<IEnumerable<UsersResultDto>> GetAllWithRelationship()
+        {
+            try
+            {
+                var Users = await _repository.GetAllWithRelationship();
+                var lst = new List<UsersResultDto>();
+                foreach (var item in Users)
+                {
+                    var obj = _mapper.Map<UsersResultDto>(item);
+                    if (item.Role != null)
+                    {
+                        obj.Role = item.Role.RoleName;
+                    }
+                    lst.Add(obj);
+                }
+                return lst;
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
 
         public async Task<Users> GetById(Guid id)
         {
             Users res = await _repository.GetById(id);
             if (res == null || res.Active != "Y")
             {
-#pragma warning disable CS8603 // Possible null reference return.
                 return null;
-#pragma warning restore CS8603 // Possible null reference return.
             }
             return res;
         }

@@ -60,9 +60,8 @@ namespace Infrastructure.Repositories.BaseRepository
             try
             {
                 Db.ChangeTracker.QueryTrackingBehavior = QueryTrackingBehavior.NoTracking;
-#pragma warning disable CS8603 // Possible null reference return.
+                Db.ChangeTracker.Clear();
                 return await DbSet.FindAsync(Id);
-#pragma warning restore CS8603 // Possible null reference return.
             }
             catch (Exception)
             {

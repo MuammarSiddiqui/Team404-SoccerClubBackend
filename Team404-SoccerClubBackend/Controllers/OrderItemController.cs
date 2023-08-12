@@ -1,6 +1,8 @@
 ﻿using ApplicationLayer.Services.OrderItemService;
+using ApplicationLayer.Services.ProductService;
 using AutoMapper;
 using DomainLayer.Dtos.OrderItem;
+using DomainLayer.Dtos.Product;
 using DomainLayer.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -17,36 +19,45 @@ namespace OrderItem404_SoccerClubBackend.Controllers
 
         private readonly IOrderItemService _service;
         private readonly IMapper _mapper;
-
-        public OrderItemController(IMapper mapper, IOrderItemService service)
+        private readonly IProductService _product;
+        public OrderItemController(IMapper mapper, IOrderItemService service,IProductService product)
         {
             _mapper = mapper;
             _service = service;
+            _product = product;
         }
         [HttpGet]
         [Route("[action]")]
         [ProducesResponseType(StatusCodes.Status200OK)]
-       
+
         public async Task<IActionResult> GetAll()
         {
             var OrderItem = await _service.GetAll();
             return Ok(_mapper.Map<IEnumerable<OrderItemResultDto>>(OrderItem));
         }
-        
+
         [HttpGet]
         [Route("[action]")]
         [ProducesResponseType(StatusCodes.Status200OK)]
-       
+
         public async Task<IActionResult> GetByOrderId(Guid Id)
         {
             var OrderItem = await _service.GetByOrderId(Id);
-            return Ok(_mapper.Map<IEnumerable<OrderItemResultDto>>(OrderItem));
+            var lst = new List<OrderItemResultDto>();
+            foreach (var item in OrderItem)
+            {
+                var obj = _mapper.Map<OrderItemResultDto>(item);
+               
+                obj.Product = _mapper.Map<ProductResultDto>(item.Product);
+                lst.Add(obj);
+            }
+            return Ok(lst);
         }
-        
+
         [HttpGet]
         [Route("[action]")]
         [ProducesResponseType(StatusCodes.Status200OK)]
-       
+
         public async Task<IActionResult> GetByProductId(Guid Id)
         {
             var OrderItem = await _service.GetByProductId(Id);
@@ -99,11 +110,57 @@ namespace OrderItem404_SoccerClubBackend.Controllers
             var OrderItemResult = _mapper.Map<OrderItem>(OrderItemDto);
             OrderItemResult.CreatedDate = LocalTime.GetTime();
             OrderItemResult.CreatedBy = UserId;
+            var product = await _product.GetById((Guid)OrderItemResult.ProductId);
+            int quantity = (int)(product.StockQuantity - OrderItemResult.Quantity);
+            product.StockQuantity = quantity;
+            await _product.Update(product);
             var result = await _service.Add(OrderItemResult);
 
             if (result == null) return BadRequest();
 
             return Ok(_mapper.Map<OrderItemResultDto>(result));
+        }
+        [HttpPost]
+        [Route("[action]")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [Authorize]
+        public async Task<IActionResult> AddRange(IEnumerable<OrderItemDto> OrderItemDto)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+            Guid UserId = Guid.Parse("3fa85f64-5717-4562-b3fc-2c963f66afa6");
+            if (HttpContext.User.Identity is ClaimsIdentity identity)
+            {
+                try
+                {
+
+                    UserId = Guid.Parse(identity.FindFirst(ClaimTypes.Name).Value.ToString());
+                }
+                catch (Exception)
+                {
+
+                    return Unauthorized();
+                }
+            }
+            var OrderItemResult = _mapper.Map<IEnumerable<OrderItem>>(OrderItemDto);
+            foreach (var item in OrderItemResult)
+            {
+                item.CreatedDate = LocalTime.GetTime();
+                item.CreatedBy = UserId;
+                item.Active = "Y";
+                var product = await _product.GetById((Guid)item.ProductId);
+                int quantity = (int)(product.StockQuantity - item.Quantity);
+                product.StockQuantity = quantity;
+                await _product.Update(product);
+            };
+            var result = await _service.AddRange(OrderItemResult);
+
+            if (result == null) return BadRequest();
+
+            return Ok(_mapper.Map<IEnumerable<OrderItemResultDto>>(result));
         }
 
 

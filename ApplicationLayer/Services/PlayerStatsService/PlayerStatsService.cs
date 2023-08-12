@@ -41,6 +41,20 @@ namespace ApplicationLayer.Services.PlayerStatsService
                 throw;
             }
         }
+        public async Task<IEnumerable<PlayerStats>> GetAllWithRelationship()
+        {
+            try
+            {
+                var PlayerStats = await _repository.GetAllWithRelationship();
+                return (from u in PlayerStats.Where(r => r.Active == "Y")
+                        select u).ToList();
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
         public async Task<PlayerStats> GetByPlayerId(Guid Id)
         {
             try

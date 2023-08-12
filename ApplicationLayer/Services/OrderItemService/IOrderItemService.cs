@@ -11,5 +11,6 @@ namespace ApplicationLayer.Services.OrderItemService
         Task<OrderItem> Remove(OrderItem OrderItem);
         Task<IEnumerable<OrderItem>> GetByProductId(Guid id);
         Task<IEnumerable<OrderItem>> GetByOrderId(Guid id);
+        Task<IEnumerable<OrderItem>> AddRange(IEnumerable<OrderItem> orderItemResult);
     }
 }

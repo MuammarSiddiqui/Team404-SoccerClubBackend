@@ -76,6 +76,12 @@ namespace ProductCategory404_SoccerClubBackend.Controllers
                     return Unauthorized();
                 }
             }
+            var allcat = await _service.GetAll();
+            var check = allcat.Where(x => x.Name.ToLower().Trim() == ProductCategoryDto.Name.ToLower().Trim()).FirstOrDefault();
+            if (check != null)
+            {
+                return BadRequest("Category Already Exists");
+            }
             var ProductCategoryResult = _mapper.Map<ProductCategory>(ProductCategoryDto);
             ProductCategoryResult.CreatedDate = LocalTime.GetTime();
             ProductCategoryResult.CreatedBy = UserId;

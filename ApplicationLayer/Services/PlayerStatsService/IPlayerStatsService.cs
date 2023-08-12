@@ -5,6 +5,7 @@ namespace ApplicationLayer.Services.PlayerStatsService
     public interface IPlayerStatsService
     {
         Task<IEnumerable<PlayerStats>> GetAll();
+        Task<IEnumerable<PlayerStats>> GetAllWithRelationship();
         Task<PlayerStats> GetById(Guid id);
         Task<PlayerStats> Add(PlayerStats PlayerStats);
         Task<PlayerStats> Update(PlayerStats PlayerStats);

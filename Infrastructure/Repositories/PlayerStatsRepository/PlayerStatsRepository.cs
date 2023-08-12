@@ -14,5 +14,9 @@ namespace Infrastructure.Repositories.PlayerStatsRepository
         {
             return await DbSet.Where(x => x.PlayerId == id).AsNoTracking().FirstOrDefaultAsync();
         }
+        public async Task<IEnumerable<PlayerStats>> GetAllWithRelationship()
+        {
+            return await DbSet.Include(x=>x.Player).AsNoTracking().ToListAsync();
+        }
     }
 }

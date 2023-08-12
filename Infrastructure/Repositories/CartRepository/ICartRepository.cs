@@ -8,5 +8,6 @@ namespace Infrastructure.Repositories.CartRepository
         Task<IEnumerable<Cart>> GetByUsersId(Guid id);
         Task<IEnumerable<Cart>> GetByProductId(Guid id);
         Task AddRange(List<Cart> list);
+        Task UpdateRange(List<Cart> list);
     }
 }

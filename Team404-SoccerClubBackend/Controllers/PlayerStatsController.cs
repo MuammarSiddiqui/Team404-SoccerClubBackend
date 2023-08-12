@@ -61,6 +61,31 @@ namespace PlayerStats404_SoccerClubBackend.Controllers
             return Ok(_mapper.Map<PlayerStatsResultDto>(PlayerStatsResult));
         }
 
+
+
+        [HttpGet]
+        [Route("[action]")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        public async Task<IActionResult> ProcessAllPlayersStats()
+        {
+            var allPlayerStats = await _service.GetAllWithRelationship();
+            allPlayerStats = allPlayerStats.Where(x => x.Player?.Active == "Y").ToList();
+            var playerStatsResults = allPlayerStats
+                .GroupBy(playerStats => playerStats.PlayerId)
+                .Select(group => new PlayerStatsResultDto
+                {
+                    PlayerId = group.Key,
+                    Player = group.FirstOrDefault().Player.Name,
+                    Goals = group.Sum(item => item.Goals ?? 0),
+                    Assists = group.Sum(item => item.Assists ?? 0),
+                    YellowCards = group.Sum(item => item.YellowCards ?? 0),
+                    RedCards = group.Sum(item => item.RedCards ?? 0),
+                    MinutesPlayed = group.Average(item => item.MinutesPlayed ?? 0)
+                }).OrderByDescending(stats => stats.Goals)
+                .ToList();
+            return Ok(playerStatsResults);
+        }
+
         [HttpPost]
         [Route("[action]")]
         [ProducesResponseType(StatusCodes.Status200OK)]

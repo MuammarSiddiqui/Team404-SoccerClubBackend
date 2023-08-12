@@ -150,6 +150,105 @@ namespace Cart404_SoccerClubBackend.Controllers
 
             return Ok(_mapper.Map<IEnumerable<CartResultDto>>(result));
         }
+        [HttpPut]
+        [Route("[action]")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [Authorize]
+        public async Task<IActionResult> UpdateRange(List<CartDto> lst)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+            Guid UserId = Guid.Parse("3fa85f64-5717-4562-b3fc-2c963f66afa6");
+            if (HttpContext.User.Identity is ClaimsIdentity identity)
+            {
+                try
+                {
+
+                    UserId = Guid.Parse(identity.FindFirst(ClaimTypes.Name).Value.ToString());
+                }
+                catch (Exception)
+                {
+
+                    return Unauthorized();
+                }
+            }
+            
+            var list = new List<Cart>();
+            var listnew = new List<CartResultDto>();
+            foreach (var item in lst)
+            {
+                var oldcart = await _service.GetById((Guid)item.Id);
+                var CartResult = _mapper.Map<Cart>(item);
+                CartResult.CreatedDate = oldcart?.CreatedDate;
+                CartResult.CreatedBy = oldcart?.CreatedBy;
+                CartResult.UpdateDate = LocalTime.GetTime();
+                CartResult.UpdatedBy = UserId;
+                list.Add(CartResult);
+            }
+            var result = await _service.UpdateRange(list);
+            foreach (var item in result)
+            {
+                var data = _mapper.Map<CartResultDto>(item);
+                data.Product = _mapper.Map<ProductResultDto>(await _product.GetById((Guid)item.ProductId));
+                listnew.Add(data);
+            }
+            if (result == null) return BadRequest();
+
+            return Ok(listnew);
+        }
+        
+        [HttpDelete]
+        [Route("[action]")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [Authorize]
+        public async Task<IActionResult> EmptyCart(Guid Id)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+            Guid UserId = Guid.Parse("3fa85f64-5717-4562-b3fc-2c963f66afa6");
+            if (HttpContext.User.Identity is ClaimsIdentity identity)
+            {
+                try
+                {
+
+                    UserId = Guid.Parse(identity.FindFirst(ClaimTypes.Name).Value.ToString());
+                }
+                catch (Exception)
+                {
+
+                    return Unauthorized();
+                }
+            }
+            var lst = await _service.GetByUsersId(Id);
+            var list = new List<Cart>();
+            var listnew = new List<CartResultDto>();
+            foreach (var item in lst)
+            {
+                var oldcart = await _service.GetById((Guid)item.Id);
+                var CartResult = _mapper.Map<Cart>(item);
+                CartResult.CreatedDate = oldcart?.CreatedDate;
+                CartResult.CreatedBy = oldcart?.CreatedBy;
+                CartResult.UpdateDate = LocalTime.GetTime();
+                CartResult.UpdatedBy = UserId;
+                list.Add(CartResult);
+            }
+            var result = await _service.RemoveRange(list);
+            foreach (var item in result)
+            {
+                var data = _mapper.Map<CartResultDto>(item);
+                data.Product = _mapper.Map<ProductResultDto>(await _product.GetById((Guid)item.ProductId));
+                listnew.Add(data);
+            }
+            if (result == null) return BadRequest();
+
+            return Ok(listnew);
+        }
 
 
         [HttpPut]
@@ -184,8 +283,9 @@ namespace Cart404_SoccerClubBackend.Controllers
             ResultNew.UpdateDate = LocalTime.GetTime();
             ResultNew.CreatedBy = Result.CreatedBy;
             ResultNew.CreatedDate = Result.CreatedDate;
-            await _service.Update(_mapper.Map<Cart>(ResultNew));
-
+           var res =  await _service.Update(_mapper.Map<Cart>(ResultNew));
+            var result = _mapper.Map<CartResultDto>(res);
+            result.Product = _mapper.Map<ProductResultDto>(await _product.GetById((Guid)res.ProductId));
             return Ok(CartDto);
         }
 

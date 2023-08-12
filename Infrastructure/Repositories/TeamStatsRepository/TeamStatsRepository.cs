@@ -14,6 +14,10 @@ namespace Infrastructure.Repositories.TeamStatsRepository
         {
             return await DbSet.Where(x => x.MatchesId == matchId && x.TeamId == teamId).FirstOrDefaultAsync();
         }
+        public async Task<IEnumerable<TeamStats>> GetAllWithRelationShip()
+        {
+            return await DbSet.Include(x=>x.Team).ToListAsync();
+        }
 
         public async Task<IEnumerable<TeamStats>> GetByMatchId(Guid id)
         {

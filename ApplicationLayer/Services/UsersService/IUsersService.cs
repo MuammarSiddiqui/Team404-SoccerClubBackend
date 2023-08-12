@@ -1,4 +1,5 @@
-﻿using DomainLayer.Models;
+﻿using DomainLayer.Dtos.UsersDto;
+using DomainLayer.Models;
 
 namespace ApplicationLayer.Services.UsersService
 {
@@ -10,6 +11,7 @@ namespace ApplicationLayer.Services.UsersService
         Task<Users> GetByEmail(string? email);
         Task<Users> Add(Users User);
         Task<Users> Update(Users User);
-
+        Task<Users> Remove(Users User);
+        Task<IEnumerable<UsersResultDto>> GetAllWithRelationship();
     }
 }

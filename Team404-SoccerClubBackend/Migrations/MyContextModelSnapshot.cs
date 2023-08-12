@@ -135,6 +135,82 @@ namespace Team404_SoccerClubBackend.Migrations
                     b.ToTable("TBL_Competition");
                 });
 
+            modelBuilder.Entity("DomainLayer.Models.ContactUs", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Active")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Comment")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid?>("CreatedBy")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime?>("CreatedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Email")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Phone")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Subject")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("UpdateDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<Guid?>("UpdatedBy")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("TBL_ContactUs");
+                });
+
+            modelBuilder.Entity("DomainLayer.Models.Feedback", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Active")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Comments")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid?>("CreatedBy")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime?>("CreatedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Email")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("UpdateDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<Guid?>("UpdatedBy")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("TBL_Feedback");
+                });
+
             modelBuilder.Entity("DomainLayer.Models.MatchStats", b =>
                 {
                     b.Property<Guid>("Id")
@@ -223,6 +299,41 @@ namespace Team404_SoccerClubBackend.Migrations
                     b.ToTable("TBL_Matches");
                 });
 
+            modelBuilder.Entity("DomainLayer.Models.News", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Active")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid?>("CreatedBy")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime?>("CreatedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Html")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Image")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Title")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("UpdateDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<Guid?>("UpdatedBy")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("TBL_News");
+                });
+
             modelBuilder.Entity("DomainLayer.Models.Order", b =>
                 {
                     b.Property<Guid>("Id")
@@ -241,6 +352,9 @@ namespace Team404_SoccerClubBackend.Migrations
                     b.Property<DateTime>("OrderDate")
                         .HasColumnType("datetime2");
 
+                    b.Property<string>("Status")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<decimal>("TotalAmount")
                         .HasColumnType("decimal(18,2)");
 
@@ -250,10 +364,15 @@ namespace Team404_SoccerClubBackend.Migrations
                     b.Property<Guid?>("UpdatedBy")
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<Guid?>("UserAddressesId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.Property<Guid?>("UsersId")
                         .HasColumnType("uniqueidentifier");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("UserAddressesId");
 
                     b.HasIndex("UsersId");
 
@@ -723,6 +842,55 @@ namespace Team404_SoccerClubBackend.Migrations
                     b.ToTable("TBL_TeamStats");
                 });
 
+            modelBuilder.Entity("DomainLayer.Models.UserAddresses", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Active")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Address1")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("City")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Country")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid?>("CreatedBy")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime?>("CreatedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("FirstName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("LastName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("UpdateDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<Guid?>("UpdatedBy")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid?>("UsersId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("ZipCode")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UsersId");
+
+                    b.ToTable("TBL_UserAddresses");
+                });
+
             modelBuilder.Entity("DomainLayer.Models.Users", b =>
                 {
                     b.Property<Guid>("Id")
@@ -819,9 +987,15 @@ namespace Team404_SoccerClubBackend.Migrations
 
             modelBuilder.Entity("DomainLayer.Models.Order", b =>
                 {
+                    b.HasOne("DomainLayer.Models.UserAddresses", "UserAddresses")
+                        .WithMany()
+                        .HasForeignKey("UserAddressesId");
+
                     b.HasOne("DomainLayer.Models.Users", "Users")
                         .WithMany()
                         .HasForeignKey("UsersId");
+
+                    b.Navigation("UserAddresses");
 
                     b.Navigation("Users");
                 });
@@ -905,6 +1079,15 @@ namespace Team404_SoccerClubBackend.Migrations
                     b.Navigation("Matches");
 
                     b.Navigation("Team");
+                });
+
+            modelBuilder.Entity("DomainLayer.Models.UserAddresses", b =>
+                {
+                    b.HasOne("DomainLayer.Models.Users", "Users")
+                        .WithMany()
+                        .HasForeignKey("UsersId");
+
+                    b.Navigation("Users");
                 });
 
             modelBuilder.Entity("DomainLayer.Models.Users", b =>

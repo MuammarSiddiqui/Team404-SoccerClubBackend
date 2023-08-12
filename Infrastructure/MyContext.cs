@@ -25,6 +25,10 @@ namespace Infrastructure
         public virtual DbSet<Competition> TBL_Competition { get; set; }
         public virtual DbSet<ClubHistory> TBL_ClubHistory { get; set; }
         public virtual DbSet<Cart> TBL_Cart { get; set; }
+        public virtual DbSet<ContactUs> TBL_ContactUs { get; set; }
+        public virtual DbSet<UserAddresses> TBL_UserAddresses { get; set; }
+        public virtual DbSet<Feedback> TBL_Feedback { get; set; }
+        public virtual DbSet<News> TBL_News { get; set; }
 
 
     }

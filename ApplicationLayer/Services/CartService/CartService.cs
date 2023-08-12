@@ -47,6 +47,40 @@ namespace ApplicationLayer.Services.CartService
                 throw;
             }
         }
+        public async Task<IEnumerable<Cart>> UpdateRange(List<Cart> list)
+        {
+            try
+            {
+                foreach (var item in list)
+                {
+                    item.Active = "Y";
+                }
+                 await _repository.UpdateRange(list);
+                return list;
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
+        public async Task<IEnumerable<Cart>> RemoveRange(List<Cart> list)
+        {
+            try
+            {
+                foreach (var item in list)
+                {
+                    item.Active = "N";
+                }
+                 await _repository.UpdateRange(list);
+                return list;
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
 
         public async Task<IEnumerable<Cart>> GetAll()
         {
@@ -86,12 +120,16 @@ namespace ApplicationLayer.Services.CartService
                 List<CartResultDto> lst = new();
                 foreach (var item in Cart)
                 {
-                    var obj = _mapper.Map<CartResultDto>(item);
-                    if (item.Product != null)
+                    if (item.Active =="Y")
                     {
-                        obj.Product = _mapper.Map<ProductResultDto>(item.Product);
+
+                        var obj = _mapper.Map<CartResultDto>(item);
+                        if (item.Product != null)
+                        {
+                            obj.Product = _mapper.Map<ProductResultDto>(item.Product);
+                        }
+                        lst.Add(obj);
                     }
-                    lst.Add(obj);
                 }
                 return lst;
             }

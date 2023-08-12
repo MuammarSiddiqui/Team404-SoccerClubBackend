@@ -1,4 +1,5 @@
-﻿using DomainLayer.Models;
+﻿using DomainLayer.Dtos.Order;
+using DomainLayer.Models;
 
 namespace ApplicationLayer.Services.OrderService
 {
@@ -9,6 +10,8 @@ namespace ApplicationLayer.Services.OrderService
         Task<Order> Add(Order Order);
         Task<Order> Update(Order Order);
         Task<Order> Remove(Order Order);
-        Task<IEnumerable<Order>> GetByUserId(Guid id);
+        Task<IEnumerable<OrderResultDto>> GetByUserId(Guid id);
+        Task<IEnumerable<OrderResultDto>> GetAllWithRelationship();
+        Task<OrderResultDto> GetByIdWithRelationship(Guid Id);
     }
 }

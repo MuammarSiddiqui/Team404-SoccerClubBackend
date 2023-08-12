@@ -10,9 +10,15 @@ namespace Infrastructure.Repositories.OrderItemRepository
         {
         }
 
+        public async Task AddRange(IEnumerable<OrderItem> orderItem)
+        {
+            await DbSet.AddRangeAsync(orderItem);
+            await SaveChanges();
+        }
+
         public async Task<IEnumerable<OrderItem>> GetByOrderId(Guid id)
         {
-            return await DbSet.Where(x => x.OrderId == id).ToListAsync();
+            return await DbSet.Include(x=>x.Product).Where(x => x.OrderId == id).ToListAsync();
         }
 
         public async Task<IEnumerable<OrderItem>> GetByProductId(Guid id)

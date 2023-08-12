@@ -4,6 +4,7 @@ using DomainLayer.Dtos.TeamStats;
 using DomainLayer.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Linq;
 using System.Security.Claims;
 using Team404_SoccerClubBackend.Config;
 
@@ -51,6 +52,29 @@ namespace Team404_SoccerClubBackend.Controllers
         {
             var TeamStats = await _service.GetByTeamId(Id);
             return Ok(_mapper.Map<IEnumerable<TeamStatsResultDto>>(TeamStats));
+        }
+        [HttpGet]
+        [Route("[action]")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        public async Task<IActionResult> ProcessAllTeamsStats()
+        {
+            var allTeamStats = await _service.GetAllWithRelationShip();
+
+            var teamStatsResults = allTeamStats
+                .GroupBy(teamStats => teamStats.TeamId)
+                .Select(group => new TeamStatsResultDto2
+                {
+                    TeamId = group.Key,
+                    Team = group.FirstOrDefault().Team?.Name,
+                    Fouls = group.Sum(item => item.Fouls),
+                    GoalsScored = group.Sum(item => item.GoalsScored),
+                    Possession = group.Average(item => item.Possession),
+                    Shots = group.Sum(item => item.Shots),
+                    GoalsConceded = group.Sum(item => item.GoalsConceded),
+                })
+                .ToList();
+
+            return Ok(teamStatsResults);
         }
 
 

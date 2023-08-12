@@ -13,5 +13,7 @@ namespace ApplicationLayer.Services.CartService
         Task<IEnumerable<Cart>> GetByProductId(Guid id);
         Task<IEnumerable<CartResultDto>> GetByUsersId(Guid id);
         Task<IEnumerable<Cart>> AddRange(List<Cart> list);
+        Task<IEnumerable<Cart>> UpdateRange(List<Cart> list);
+        Task<IEnumerable<Cart>> RemoveRange(List<Cart> list);
     }
 }

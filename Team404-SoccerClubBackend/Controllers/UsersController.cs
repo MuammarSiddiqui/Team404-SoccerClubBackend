@@ -132,6 +132,45 @@ namespace Team404_SoccerClubBackend.Controllers
             }
             return Ok(_mapper.Map<UsersResultDto>(result));
         }
+        [HttpGet]
+        [Route("[action]")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [Authorize]
+        public async Task<IActionResult> Remove(Guid Id)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+            var result = await _service.GetById(Id);
+
+            if (result == null)
+            {
+                return BadRequest(); ;
+            }
+            return Ok(_mapper.Map<UsersResultDto>(result));
+        }
+        
+        [HttpGet]
+        [Route("[action]")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [Authorize]
+        public async Task<IActionResult> GetAllWithRelationship()
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+            var result = await _service.GetAllWithRelationship();
+
+            if (result == null)
+            {
+                return BadRequest(); ;
+            }
+            return Ok(result);
+        }
 
 
 

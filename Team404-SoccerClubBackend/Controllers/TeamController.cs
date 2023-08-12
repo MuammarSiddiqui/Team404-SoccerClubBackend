@@ -1,6 +1,5 @@
 ﻿using ApplicationLayer.Services.TeamService;
 using AutoMapper;
-using DomainLayer.Dtos.SoccerInfo;
 using DomainLayer.Dtos.Team;
 using DomainLayer.Models;
 using Microsoft.AspNetCore.Authorization;
@@ -98,6 +97,12 @@ namespace Team404_SoccerClubBackend.Controllers
 
                     return Unauthorized();
                 }
+            }
+            var allteams = await _service.GetAll();
+            var check = allteams.Where(x => x.Name.ToLower().Trim() == TeamDto.Name.ToLower().Trim()).FirstOrDefault();
+            if (check != null)
+            {
+                return BadRequest("Team Already Exists");
             }
             var TeamResult = _mapper.Map<Team>(TeamDto);
             TeamResult.CreatedDate = LocalTime.GetTime();

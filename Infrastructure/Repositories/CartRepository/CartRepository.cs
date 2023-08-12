@@ -25,5 +25,11 @@ namespace Infrastructure.Repositories.CartRepository
              await DbSet.AddRangeAsync(list);
             await SaveChanges();
         }
+        public async Task UpdateRange(List<Cart> list)
+        {
+            Db.ChangeTracker.Clear();
+            DbSet.UpdateRange(list);
+            await SaveChanges();
+        }
     }
 }

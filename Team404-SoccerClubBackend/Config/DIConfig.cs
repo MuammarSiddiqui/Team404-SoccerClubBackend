@@ -1,8 +1,11 @@
 ﻿using ApplicationLayer.Services.CartService;
 using ApplicationLayer.Services.ClubHistoryService;
 using ApplicationLayer.Services.CompetitionService;
+using ApplicationLayer.Services.ContactUsService;
+using ApplicationLayer.Services.FeedbackService;
 using ApplicationLayer.Services.MatchesService;
 using ApplicationLayer.Services.MatchStatsService;
+using ApplicationLayer.Services.NewsService;
 using ApplicationLayer.Services.OrderItemService;
 using ApplicationLayer.Services.OrderService;
 using ApplicationLayer.Services.PlayerAchievementService;
@@ -21,8 +24,11 @@ using Infrastructure;
 using Infrastructure.Repositories.CartRepository;
 using Infrastructure.Repositories.ClubHistoryRepository;
 using Infrastructure.Repositories.CompetitionRepository;
+using Infrastructure.Repositories.ContactUsRepository;
+using Infrastructure.Repositories.FeedbackRepository;
 using Infrastructure.Repositories.MatchesRepository;
 using Infrastructure.Repositories.MatchStatsRepository;
+using Infrastructure.Repositories.NewsRepository;
 using Infrastructure.Repositories.OrderItemRepository;
 using Infrastructure.Repositories.OrderRepository;
 using Infrastructure.Repositories.PlayerAchievementRepository;
@@ -115,6 +121,21 @@ namespace Team404_SoccerClubBackend.Config
             //UserAddresses
             services.AddScoped<IUserAddressesRepository, UserAddressesRepository>();
             services.AddScoped<IUserAddressesService, UserAddressesService>();
+
+
+            //ContactUs
+            services.AddScoped<IContactUsRepository, ContactUsRepository>();
+            services.AddScoped<IContactUsService, ContactUsService>();
+
+
+            //Feedback
+            services.AddScoped<IFeedbackRepository, FeedbackRepository>();
+            services.AddScoped<IFeedbackService, FeedbackService>();
+
+
+            //News
+            services.AddScoped<INewsRepository, NewsRepository>();
+            services.AddScoped<INewsService, NewsService>();
             
             //File
             services.AddScoped<IFileUpload, FileUpload>();

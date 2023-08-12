@@ -26,6 +26,24 @@ namespace ApplicationLayer.Services.OrderItemService
                 throw;
             }
         }
+        
+        public async Task<IEnumerable<OrderItem>> AddRange(IEnumerable<OrderItem> OrderItem)
+        {
+            try
+            {
+                foreach (var item in OrderItem)
+                {
+                    item.Active = "Y";
+                }
+                await _repository.AddRange(OrderItem);
+                return OrderItem;
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
 
         public async Task<IEnumerable<OrderItem>> GetAll()
         {
@@ -77,9 +95,7 @@ namespace ApplicationLayer.Services.OrderItemService
             OrderItem res = await _repository.GetById(id);
             if (res == null || res.Active != "Y")
             {
-#pragma warning disable CS8603 // Possible null reference return.
                 return null;
-#pragma warning restore CS8603 // Possible null reference return.
             }
             return res;
         }

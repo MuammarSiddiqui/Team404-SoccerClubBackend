@@ -70,7 +70,7 @@ var app = builder.Build();
     app.UseSwaggerUI();
 //}
 app.UseStaticFiles();
-string[] GlobalFolders = { "Files\\Users" , "Files\\Product", "Files\\PlayerImages", "Files\\Team", "Files\\SoccerInfo" };
+string[] GlobalFolders = { "Files\\Users" , "Files\\Product", "Files\\PlayerImages", "Files\\Team", "Files\\SoccerInfo", "Files\\ClubHistory", "Files\\News" };
 
 if (!Directory.Exists("Files"))
 {

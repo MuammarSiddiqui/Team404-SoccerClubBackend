@@ -41,7 +41,28 @@ namespace Order404_SoccerClubBackend.Controllers
         public async Task<IActionResult> GetByUserId(Guid Id)
         {
             var Order = await _service.GetByUserId(Id);
-            return Ok(_mapper.Map<IEnumerable<OrderResultDto>>(Order));
+            return Ok(Order);
+        }
+        
+        [HttpGet]
+        [Route("[action]")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+       
+        public async Task<IActionResult> GetByIdWithRelationship(Guid Id)
+        {
+            var Order = await _service.GetByIdWithRelationship(Id);
+            return Ok(Order);
+        }
+        
+        
+        [HttpGet]
+        [Route("[action]")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+       
+        public async Task<IActionResult> GetAllWithRelationship()
+        {
+            var Order = await _service.GetAllWithRelationship();
+            return Ok(Order);
         }
 
 
@@ -90,6 +111,7 @@ namespace Order404_SoccerClubBackend.Controllers
             var OrderResult = _mapper.Map<Order>(OrderDto);
             OrderResult.CreatedDate = LocalTime.GetTime();
             OrderResult.CreatedBy = UserId;
+            OrderResult.Status = "pending";
             var result = await _service.Add(OrderResult);
 
             if (result == null) return BadRequest();
@@ -133,6 +155,41 @@ namespace Order404_SoccerClubBackend.Controllers
             await _service.Update(_mapper.Map<Order>(ResultNew));
 
             return Ok(OrderDto);
+        }
+        
+        [HttpGet]
+        [Route("[action]")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [Authorize]
+        public async Task<IActionResult> MarkAs(Guid Id,string Status)
+        {
+
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+            Guid UserId = Guid.Parse("3fa85f64-5717-4562-b3fc-2c963f66afa6");
+            if (HttpContext.User.Identity is ClaimsIdentity identity)
+            {
+                try
+                {
+
+                    UserId = Guid.Parse(identity.FindFirst(ClaimTypes.Name).Value.ToString());
+                }
+                catch (Exception)
+                {
+
+                    return Unauthorized();
+                }
+            }
+            var Result = await _service.GetById(Id);
+            Result.UpdatedBy = UserId;
+            Result.Status = Status;
+            Result.UpdateDate = LocalTime.GetTime();
+            await _service.Update(Result);
+
+            return Ok(Result);
         }
 
 

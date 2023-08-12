@@ -5,6 +5,7 @@ namespace ApplicationLayer.Services.TeamStatsService
     public interface ITeamStatsService
     {
         Task<IEnumerable<TeamStats>> GetAll();
+        Task<IEnumerable<TeamStats>> GetAllWithRelationShip();
         Task<TeamStats> GetById(Guid id);
         Task<TeamStats> Add(TeamStats TeamStats);
         Task<TeamStats> Update(TeamStats TeamStats);

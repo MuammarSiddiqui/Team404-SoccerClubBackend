@@ -43,6 +43,21 @@ namespace ApplicationLayer.Services.TeamStatsService
             }
         }
         
+        public async Task<IEnumerable<TeamStats>> GetAllWithRelationShip()
+        {
+            try
+            {
+                var TeamStats = await _repository.GetAllWithRelationShip();
+                return (from u in TeamStats.Where(r => r.Active == "Y")
+                        select u).ToList();
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
+        
 
         public async Task<IEnumerable<TeamStats>> GetByTeamId(Guid Id)
         {
