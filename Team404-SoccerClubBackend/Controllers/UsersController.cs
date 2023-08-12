@@ -73,6 +73,43 @@ namespace Team404_SoccerClubBackend.Controllers
         [Route("[action]")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<ActionResult<object>> LoginAdmin(UsersLoginDto request)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+            Users Users = await _service.Get(request.Username);
+
+            if (Users == null)
+
+            {
+                return BadRequest("Users not found");
+            }
+            if (!VerifyPasswordHash(request.Password, Users.PasswordHash, Users.PasswordSalt))
+            {
+                return BadRequest("wrong password");
+            }
+            var token = await CreateTokenAdmin(Users);
+            if (token == null)
+            {
+                return BadRequest("User Not Found");
+            }
+            var tokenHandler = new JwtSecurityTokenHandler();
+            var newtoken = tokenHandler.WriteToken(token);
+            var cred = new
+            {
+                token = newtoken,
+                Users = _mapper.Map<UsersResultDto>(Users),
+            };
+            await _service.Update(Users);
+            return Ok(cred);
+        }
+        
+        [HttpPost]
+        [Route("[action]")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult<object>> LoginWithCartAdd(UsersLoginWithCartDto request)
         {
             if (!ModelState.IsValid)
@@ -96,6 +133,7 @@ namespace Team404_SoccerClubBackend.Controllers
                 var CartResult = _mapper.Map<Cart>(item);
                 CartResult.CreatedDate = LocalTime.GetTime();
                 CartResult.CreatedBy = Users.Id;
+                CartResult.UsersId = Users.Id;
                 list.Add(CartResult);
             }
             var result = await _cart.AddRange(list);
@@ -369,6 +407,29 @@ namespace Team404_SoccerClubBackend.Controllers
         private async Task<JwtSecurityToken> CreateToken(Users Users)
         {
             var res = await _rolesService.GetById((Guid)Users.RoleId);
+            List<Claim> claims = new()
+            {
+                    new Claim(ClaimTypes.Name, (Users.Id).ToString()),
+                    new Claim(ClaimTypes.Role, res.RoleName),
+                };
+
+
+            var key = new SymmetricSecurityKey(System.Text.Encoding.UTF8.GetBytes("this is a string used for encrypt and decrypt token"));
+            var cred = new SigningCredentials(key, SecurityAlgorithms.HmacSha512Signature);
+            var token = new JwtSecurityToken(
+                claims: claims,
+                expires: LocalTime.GetTime().AddDays(1),
+                signingCredentials: cred
+                );
+
+            return token;
+        }  private async Task<JwtSecurityToken> CreateTokenAdmin(Users Users)
+        {
+            var res = await _rolesService.GetById((Guid)Users.RoleId);
+            if (res.RoleName.ToLower().Trim()!="admin")
+            {
+                return null;
+            }
             List<Claim> claims = new()
             {
                     new Claim(ClaimTypes.Name, (Users.Id).ToString()),

@@ -59,7 +59,7 @@ namespace ClubHistory404_SoccerClubBackend.Controllers
         [Route("[action]")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        [Authorize]
+        [Authorize(Roles ="admin")]
         public async Task<IActionResult> Add([FromForm]ClubHistoryDto ClubHistoryDto)
         {
             if (!ModelState.IsValid)
@@ -99,7 +99,7 @@ namespace ClubHistory404_SoccerClubBackend.Controllers
         [Route("[action]")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        [Authorize]
+        [Authorize(Roles ="admin")]
         public async Task<IActionResult> Update([FromForm]ClubHistoryDto ClubHistoryDto)
         {
 
@@ -145,7 +145,7 @@ namespace ClubHistory404_SoccerClubBackend.Controllers
         [Route("[action]")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        [Authorize]
+        [Authorize(Roles ="admin")]
         public async Task<IActionResult> Remove(Guid id)
         {
             if (!ModelState.IsValid)

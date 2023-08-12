@@ -162,7 +162,7 @@ namespace Product404_SoccerClubBackend.Controllers
         [Route("[action]")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        [Authorize]
+        [Authorize(Roles ="admin")]
         public async Task<IActionResult> Add([FromForm] ProductDto ProductDto)
         {
             if (!ModelState.IsValid)
@@ -202,7 +202,7 @@ namespace Product404_SoccerClubBackend.Controllers
         [Route("[action]")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        [Authorize]
+        [Authorize(Roles ="admin")]
         public async Task<IActionResult> Update([FromForm] ProductDto ProductDto)
         {
 
@@ -248,7 +248,7 @@ namespace Product404_SoccerClubBackend.Controllers
         [Route("[action]")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        [Authorize]
+        [Authorize(Roles ="admin")]
         public async Task<IActionResult> Remove(Guid id)
         {
             if (!ModelState.IsValid)

@@ -2,6 +2,7 @@
 using AutoMapper;
 using DomainLayer.Dtos.RoleDto;
 using DomainLayer.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
 using Team404_SoccerClubBackend.Config;
@@ -11,6 +12,7 @@ namespace Team404_SoccerClubBackend.Controllers
 
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class RoleController : ControllerBase
     {
 

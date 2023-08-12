@@ -26,17 +26,17 @@ namespace MatchStats404_SoccerClubBackend.Controllers
         [HttpGet]
         [Route("[action]")]
         [ProducesResponseType(StatusCodes.Status200OK)]
-       
+
         public async Task<IActionResult> GetAll()
         {
             var MatchStats = await _service.GetAll();
             return Ok(_mapper.Map<IEnumerable<MatchStatsResultDto>>(MatchStats));
         }
-        
+
         [HttpGet]
         [Route("[action]")]
         [ProducesResponseType(StatusCodes.Status200OK)]
-       
+
         public async Task<IActionResult> GetByMatchId(Guid Id)
         {
             var MatchStats = await _service.GetByMatchId(Id);
@@ -66,7 +66,7 @@ namespace MatchStats404_SoccerClubBackend.Controllers
         [Route("[action]")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        [Authorize]
+        [Authorize(Roles = "admin")]
         public async Task<IActionResult> Add(MatchStatsDto MatchStatsDto)
         {
             if (!ModelState.IsValid)
@@ -102,7 +102,7 @@ namespace MatchStats404_SoccerClubBackend.Controllers
         [Route("[action]")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        [Authorize]
+        [Authorize(Roles = "admin")]
         public async Task<IActionResult> Update(MatchStatsDto MatchStatsDto)
         {
 
@@ -140,7 +140,7 @@ namespace MatchStats404_SoccerClubBackend.Controllers
         [Route("[action]")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        [Authorize]
+        [Authorize(Roles = "admin")]
         public async Task<IActionResult> Remove(Guid id)
         {
             if (!ModelState.IsValid)
