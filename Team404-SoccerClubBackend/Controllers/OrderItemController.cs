@@ -151,10 +151,6 @@ namespace OrderItem404_SoccerClubBackend.Controllers
                 item.CreatedDate = LocalTime.GetTime();
                 item.CreatedBy = UserId;
                 item.Active = "Y";
-                var product = await _product.GetById((Guid)item.ProductId);
-                int quantity = (int)(product.StockQuantity - item.Quantity);
-                product.StockQuantity = quantity;
-                await _product.Update(product);
             };
             var result = await _service.AddRange(OrderItemResult);
 

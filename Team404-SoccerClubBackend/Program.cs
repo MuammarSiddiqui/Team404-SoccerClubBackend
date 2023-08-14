@@ -43,7 +43,6 @@ builder.Services.AddSwaggerGen(options =>
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
     {
-#pragma warning disable CS8604 // Possible null reference argument.
         options.TokenValidationParameters = new TokenValidationParameters
         {
             ValidateIssuerSigningKey = true,
@@ -52,7 +51,6 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             ValidateAudience = false,
             SaveSigninToken = true,
         };
-#pragma warning restore CS8604 // Possible null reference argument.
     });
 
 builder.Services.AddDbContext<MyContext>(options =>

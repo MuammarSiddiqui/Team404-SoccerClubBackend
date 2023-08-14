@@ -54,13 +54,13 @@ namespace Matches404_SoccerClubBackend.Controllers
         {
             var Matches = await _service.GetAllWithRelationship();
             var res = _mapper.Map<IEnumerable<MatchesResultDto>>(Matches);
-            var upcoming = res.Where(x => x.DateTime.Date >= DateTime.Now.Date).ToList();
+            var upcoming = res.Where(x => x.DateTime > LocalTime.GetTime()).ToList();
             var obj = new
             {
-                Today = res.Where(x => x.DateTime.Date == DateTime.Now.Date),
-                Upcoming = res.Where(x => x.DateTime.Date > DateTime.Now.Date),
-                Previous = res.Where(x => x.DateTime.Date < DateTime.Now.Date),
-                UpcomingRecent = upcoming.OrderByDescending(x => x.DateTime).FirstOrDefault()
+                Today = res.Where(x => x.DateTime.Date == LocalTime.GetTime().Date),
+                Upcoming = res.Where(x => x.DateTime.Date > LocalTime.GetTime().Date),
+                Previous = res.Where(x => x.DateTime.Date < LocalTime.GetTime().Date),
+                UpcomingRecent = upcoming.OrderByDescending(x => x.DateTime).Where(x=>x.DateTime > LocalTime.GetTime()).LastOrDefault()
             };
             return Ok(obj);
         }
@@ -158,7 +158,7 @@ namespace Matches404_SoccerClubBackend.Controllers
                     return Unauthorized();
                 }
             }
-            if (MatchesDto.DateTime.Date < DateTime.Now.Date)
+            if (MatchesDto.DateTime.Date < LocalTime.GetTime().Date)
             {
              //   return BadRequest("Matches Cannot be scheduled on past dates");
             }
@@ -204,7 +204,7 @@ namespace Matches404_SoccerClubBackend.Controllers
                     return Unauthorized();
                 }
             }
-            if (MatchesDto.DateTime.Date < DateTime.Now.Date)
+            if (MatchesDto.DateTime.Date < LocalTime.GetTime().Date)
             {
              //   return BadRequest("Matches Cannot be scheduled on past dates");
             }

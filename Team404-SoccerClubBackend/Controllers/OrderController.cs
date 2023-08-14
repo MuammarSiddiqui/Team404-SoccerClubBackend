@@ -1,9 +1,12 @@
-﻿using ApplicationLayer.Services.OrderService;
+﻿using ApplicationLayer.Services.OrderItemService;
+using ApplicationLayer.Services.OrderService;
+using ApplicationLayer.Services.ProductService;
 using AutoMapper;
 using DomainLayer.Dtos.Order;
 using DomainLayer.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.IdentityModel.Tokens;
 using System.Security.Claims;
 using Team404_SoccerClubBackend.Config;
 
@@ -16,10 +19,14 @@ namespace Order404_SoccerClubBackend.Controllers
     {
 
         private readonly IOrderService _service;
+        private readonly IOrderItemService _orderItem;
+        private readonly IProductService _product;
         private readonly IMapper _mapper;
 
-        public OrderController(IMapper mapper, IOrderService service)
+        public OrderController(IMapper mapper, IOrderService service,IOrderItemService orderItem,IProductService product)
         {
+            _orderItem = orderItem;
+            _product = product;
             _mapper = mapper;
             _service = service;
         }
@@ -181,6 +188,29 @@ namespace Order404_SoccerClubBackend.Controllers
                 {
 
                     return Unauthorized();
+                }
+            }
+            var OrderItems = await _orderItem.GetByOrderId(Id);
+            if (Status.ToLower().Trim() == "shipped")
+            {
+                foreach (var item in OrderItems)
+                {
+
+                    var product = await _product.GetById((Guid)item.ProductId);
+                    int quantity = (int)(product.StockQuantity - item.Quantity);
+                    product.StockQuantity = quantity;
+                    await _product.Update(product);
+                }
+            }
+            else if (Status.ToLower().Trim() == "cancel")
+            {
+                foreach (var item in OrderItems)
+                {
+
+                    var product = await _product.GetById((Guid)item.ProductId);
+                    int quantity = (int)(product.StockQuantity + item.Quantity);
+                    product.StockQuantity = quantity;
+                    await _product.Update(product);
                 }
             }
             var Result = await _service.GetById(Id);

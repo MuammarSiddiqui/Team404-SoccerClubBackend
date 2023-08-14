@@ -170,7 +170,7 @@ namespace Team404_SoccerClubBackend.Controllers
             }
             return Ok(_mapper.Map<UsersResultDto>(result));
         }
-        [HttpGet]
+        [HttpDelete]
         [Route("[action]")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -182,6 +182,7 @@ namespace Team404_SoccerClubBackend.Controllers
                 return BadRequest(ModelState);
             }
             var result = await _service.GetById(Id);
+             await _service.Remove(result);
 
             if (result == null)
             {
@@ -323,8 +324,8 @@ namespace Team404_SoccerClubBackend.Controllers
                 return BadRequest(ex.Message.ToString());
             }
         }
-        [HttpPost("RegisterWithCart")]
-        public async Task<IActionResult> RegisterWithCart([FromForm]UsersDtoWithCart request)
+        [HttpPost("RegisterWithCartAdd")]
+        public async Task<IActionResult> RegisterWithCartAdd([FromForm]UsersDtoWithCart request)
         {
             if (!ModelState.IsValid)
             {

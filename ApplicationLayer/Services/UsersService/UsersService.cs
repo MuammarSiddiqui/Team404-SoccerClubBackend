@@ -72,12 +72,15 @@ namespace ApplicationLayer.Services.UsersService
                 var lst = new List<UsersResultDto>();
                 foreach (var item in Users)
                 {
-                    var obj = _mapper.Map<UsersResultDto>(item);
-                    if (item.Role != null)
+                    if (item.Active =="Y")
                     {
-                        obj.Role = item.Role.RoleName;
+                        var obj = _mapper.Map<UsersResultDto>(item);
+                        if (item.Role != null)
+                        {
+                            obj.Role = item.Role.RoleName;
+                        }
+                        lst.Add(obj);
                     }
-                    lst.Add(obj);
                 }
                 return lst;
             }
